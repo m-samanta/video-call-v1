@@ -45,7 +45,13 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings'}) => {
             Call | CallRecording) => (
                 <MeetingCard
                 key={(meeting as Call).id}
-                icon=''
+                icon={
+                    type === 'ended'
+                    ? '/icons/previous.svg'
+                    : type === 'upcoming'
+                    ? '/icons/upcoming.svg'
+                    : '/icons/recordings.svg'
+                }
                 title=''
                 date=''
                 isPreviousMeeting=''
