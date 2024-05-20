@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useGetCallById } from "@/hooks/useGetCallById";
 import { useUser } from "@clerk/nextjs";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Table = ({
@@ -29,6 +30,7 @@ const PersonalRoom = () => {
   const meetingId = user?.id;
   const { toast } = useToast();
   const client = useStreamVideoClient();
+  const router = useRouter();
 
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${meetingId}?personal=true`;
 
@@ -46,6 +48,7 @@ const PersonalRoom = () => {
         },
       });
     }
+    router.push(`/meeting/${meetingId}?personal=true`);
   };
 
   return (
