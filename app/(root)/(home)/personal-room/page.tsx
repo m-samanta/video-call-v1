@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { useGetCallById } from "@/hooks/useGetCallById";
 import { useUser } from "@clerk/nextjs";
+import { useStreamVideoClient } from "@stream-io/video-react-sdk";
 import React from "react";
 
 const Table = ({
@@ -26,9 +28,25 @@ const PersonalRoom = () => {
   const { user } = useUser();
   const meetingId = user?.id;
   const { toast } = useToast();
+  const client = useStreamVideoClient();
+
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${meetingId}?personal=true`;
 
-  const startRoom = async () => {};
+  const { call } = useGetCallById(meetingId!);
+
+  const startRoom = async () => {
+    if (!client || !user) return;
+
+    if (!call) {
+      const newCall = client.call("default", meetingId!);
+
+      await newCall.getOrCreate({
+        data: {
+          starts_at: new Date().toISOString(),
+        },
+      });
+    }
+  };
 
   return (
     <section className="flex size-full flex-col gap-10 text-white">
